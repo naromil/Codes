@@ -1,0 +1,87 @@
+#include<bits/stdc++.h>
+#define emp emplace_back
+using namespace std;
+using ll=long long;
+using cit=const int*;
+const int kn=4e5+45;
+int n,a[kn],siz[kn],dfn[kn],nfd[kn],dft=0,nft=0;
+vector<int> c[kn];
+class SGT{
+	public:
+	multiset<int> t[kn];
+	inline void init(cit u,cit l,cit r){
+		t[u].clear();
+		int md=(l+r)>>1,ls=u<<1,rs=u<<1|1;
+		init(ls,l,md);
+		init(rs,md+1,r);
+	}
+	void upd(cit u,cit l,cit r,cit x,cit w){
+		t[u].insert(w);
+		int md=(l+r)>>1,ls=u<<1,rs=u<<1|1;
+		if(x<=md) upd(ls,l,md,x,w);
+		else upd(rs,md+1,r,x,w);
+	}
+	int gtm(cit u,cit l,cit r,cit x,cit y){
+		if(l==x&&r==y){
+			return *t[u].rbegin();
+		}
+		int md=(l+r)>>1,ls=u<<1,rs=u<<1|1;
+		if(y<=md) return gtm(ls,l,md,x,y);
+		else if(x>md) return gtm(rs,md+1,r,x,y);
+		else return max(gtm(ls,l,md,x,md), gtm(rs,md+1,r,md+1,y));
+	}
+	inline int sol(cit xl,cit xr,cit yl,cit yr){
+	}
+}S,G;
+void dfs(int u,int b){
+	dfn[u]=++dft;
+	S.upd(1,1,n,dfn[u],a[u]);
+	siz[u]=1;
+	for(int j=0;j<c[u].size();++j){
+		int v=c[u][j];
+		if(v==b) continue;
+		dfs(v,u);
+		siz[u]+=siz[v];
+	}
+}
+void sfd(int u,int b){
+	nfd[u]=++nft;
+	S.upd(1,1,n,nfd[u],a[u]);
+	for(int j=c[u].size()-1;j>=0;--j){
+		int v=c[u][j];
+		if(v==b) continue;
+		dfs(v,u);
+	}
+}
+inline void _solv(){
+	cin>>n;
+	for(int i=1;i<=n;++i){
+		cin>>a[i];
+	}
+	for(int i=1,x,y;i<n;++i){
+		cin>>x>>y;
+		c[x].emp(y);
+		c[y].emp(x);
+	}
+	dfs(1,0);
+	sfd(1,0);
+	vector<int> ans;
+	for(int u=1;u<=n;++u){
+		int w=max(S.sol(1,dfn[u]-1,dfn[u]+siz[u],n), G.sol(1,nfd[u]-1,nfd[u]+siz[u],n));
+		int v=max(S.gtm(1,1,n,1,dfn[u]-1), S.gtm(1,1,n,dfn[u]+siz[u],n));
+		if(a[u]<v && a[u]>=w) ans.emp(u);
+	}
+	printf("%ld ",ans.size());
+	for(auto u: ans) printf("%d ",u);
+	printf("\n");
+	S.init(1,1,n);
+	T.init(1,1,n);
+	dft=nft=0;
+	for(int i=1;i<=n;++i) c[i].clear();
+}
+signed main(){
+	cin.tie(0)->ios::sync_with_stdio(false);
+	int T; cin>>T;
+	while(T--) _solv();
+	return 0;
+}

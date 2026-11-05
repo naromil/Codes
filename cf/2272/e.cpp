@@ -1,46 +1,55 @@
 #include <bits/stdc++.h>
+#include <cassert>
 #define emp emplace_back
 using namespace std;
 using ll = long long;
 const int kn = 2e5 + 25;
 
-int n, m, s0[kn], s1[kn];
+int n, m;
 string a, b;
 
 inline void _solv2() {
-    vector<int> w;
-    for (int j = 1; j <= m; j++){
-        if (b[j] == 'W') w.push_back(j);
-    }
 
-    vector<ll> g;
-    for (int k = 0; k + 1 < w.size(); k++) {
-        g.push_back(w[k+1] - w[k]);
-    }
-    sort(g.begin(), g.end());
-
-    vector<ll> pre(g.size() + 1, 0);
-    for (int k = 0; k < g.size(); k++){
-        pre[k+1] = pre[k] + g[k];
-    }
-
-    int p = 0;
-    for (int i = 1; i <= n; i++) {
-        if (a[i] == 'W') { p = i; continue; }
-        ll ans;
-        if (p > 0) {
-            ans = m + 1;
-            if (!w.empty()) ans = max<ll>(m, w.back() + i - 1 - p) + 1;
+    vector<int> g;
+    vector<ll> sum;
+    int lst = -1e9;
+    for (int i = 1; i <= m; i++) {
+        if (b[i] == 'W') {
+            if (lst > 0) g.emp(i - lst);
+            lst = i;
         }
-        else if (w.empty()) {
-            ans = 1;
+    }
+
+    sort(g.begin(), g.end());
+    for (int i = 0; i < g.size(); i++) sum.emp(g[i]);
+    for (int i = 1; i < g.size(); i++) sum[i] += sum[i-1];
+
+    int x = -1e9;
+    vector<ll> ans;
+    for (int i = 1; i <= n; i++) {
+        if (a[i] != 'R') {
+            x = i;
+            continue;
+        }
+
+        if (x > 0) {
+            int rt = max(x + m, lst + i - 1);
+            ans.emp(rt - x + 1);
         }
         else {
-            ll L = i;
-            int c = lower_bound(g.begin(), g.end(), L) - g.begin();
-            ans = 1 + L + pre[c] + (ll)(g.size() - c) * L;
+            if (lst > 0) {
+                int mt = lower_bound(g.begin(), g.end(), i) - g.begin();
+                ll pre = (mt == 0) ? 0 : sum[mt-1];
+                ans.emp(1 + pre + (g.size() - mt + 1ll) * 1ll * i);
+            }
+            else {
+                ans.emp(1);
+            }
         }
-        printf("%lld ", ans);
+    }
+
+    for (auto y : ans) {
+        printf("%lld ", y);
     }
     printf("\n");
 }

@@ -130,8 +130,8 @@ public class DataStructureAssignment {
         }
     }
 
-    public static void q9() {
-        Scanner scr = new Scanner(System.in);
+    public static void q9(Scanner scr) {
+
         while (true) {
             System.out.print("How can I serve you my master? ");
             String s = scr.next();
@@ -153,8 +153,8 @@ public class DataStructureAssignment {
             } else {
                 System.out.println("\nEncrypted: " + s + "\nWord: " + ss);
             }
+            System.out.println();
         }
-        scr.close();
     }
 
     // question 10
@@ -185,6 +185,43 @@ public class DataStructureAssignment {
         initializeSpell();
         initializeEncryption();
         initializeScrabble();
+
+        Scanner scr = new Scanner(System.in);
+        int x = scr.nextInt();
+
+        List<Integer> tst = new ArrayList<>(List.of(250, 1, 2, 3, 4, 5, 202, 4, 3, 5));
+        Stack<Integer> tstStk = new Stack<>();
+        Queue<Integer> tstQue = new LinkedList<>(tst);
+        tstStk.addAll(tst);
+
+        switch (x) {
+            case 4:
+                System.out.println(q4b(tstStk));
+                break;
+            case 5:
+                q5();
+                break;
+            case 6:
+                System.out.println(q6(tst));
+                break;
+            case 7:
+                System.out.println(q7(tstQue));
+                break;
+            case 8:
+                System.out.println(q8("Lightning"));
+                System.out.println(q8("Earthquake"));
+                System.out.println(q8("Null"));
+                break;
+            case 9:
+                q9(scr);
+                break;
+            case 10:
+                System.out.println(q10("HELLOWORLD"));
+                System.out.println(q10("smallercase"));
+                break;
+        }
+
+        scr.close();
         return;
     }
 }

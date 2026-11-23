@@ -11,6 +11,16 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.TreeMap;
 
+/**
+ * Q4B = 5pts
+ * Q5 = 5pts
+ * Q6 = 4pts
+ * Q7 = 5pts
+ * Q8 = 4pts
+ * Q9 = 6pts
+ * Q10 = 4pts
+ * TOTAL: 33/25
+ */
 public class DataStructureAssignment {
 
     // question 4B
